@@ -1,4 +1,4 @@
-name: Build IPA for TrollStore
+name: Clean IPA Build
 
 on:
   workflow_dispatch:
@@ -8,40 +8,39 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout code
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      # 2. Setup Xcode
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # 🔥 FIX THẬT (LOẠI XIB + STORYBOARD KHỎI BUILD)
-      - name: 🔥 Remove XIB & Storyboard from project
+      # 3. Clean environment
+      - name: Clean system cache
         run: |
-          FILE="vteeniovn.xcodeproj/project.pbxproj"
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          rm -rf Pods
+          rm -rf Podfile.lock
 
-          cp $FILE backup.pbxproj
-
-          # Xóa mọi reference tới xib + storyboard trong build phase
-          grep -vE '\.xib|\.storyboard' backup.pbxproj > $FILE
-
-      # Pods
+      # 4. Install CocoaPods (sạch)
       - name: Install Pods
         run: |
           gem install cocoapods
-          rm -rf Pods Podfile.lock
-          pod deintegrate
-          pod install --repo-update
+          pod repo update
+          pod install
 
-      # Clean
-      - name: Clean
+      # 5. Clean build project
+      - name: Clean build
         run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData
           xcodebuild clean \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
-      # Build
-      - name: Archive
+      # 6. Build Archive (NO SIGN)
+      - name: Archive IPA
         run: |
           xcodebuild archive \
             -workspace vteeniovn.xcworkspace \
@@ -52,9 +51,9 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
-            CODE_SIGN_STYLE=Manual
+            DEVELOPMENT_TEAM=""
 
+      # 7. Export IPA
       - name: Export IPA
         run: |
           mkdir -p build
@@ -63,7 +62,9 @@ jobs:
             -exportPath build \
             -exportOptionsPlist ExportOptions.plist
 
-      - uses: actions/upload-artifact@v4
+      # 8. Upload artifact
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
         with:
-          name: IPA
+          name: Clean-IPA
           path: build/*.ipa
