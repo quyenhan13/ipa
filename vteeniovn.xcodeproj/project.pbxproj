@@ -62,6 +62,7 @@
 		209B3219193FA36F0052A7C6 /* LEANUrlCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 209B3218193FA36F0052A7C6 /* LEANUrlCache.m */; };
 		209B321D193FB11A0052A7C6 /* localCache.zip in Resources */ = {isa = PBXBuildFile; fileRef = 209B321C193FB11A0052A7C6 /* localCache.zip */; };
 		20A0B6ED1A363EFB00D9C3F2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A0B6EC1A363EFB00D9C3F2 /* MessageUI.framework */; };
+		20A13AB61905DED100B997DD /* MenuChildIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13AB51905DED100B997DD /* MenuChildIcon.xib */; };
 		20A13AB81905DFFC00B997DD /* MenuGroupNoIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */; };
 		20A13ABC1905FAA600B997DD /* MenuChildNoIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */; };
 		20A525EE1A7D94EE00936DC5 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 20A525ED1A7D94EE00936DC5 /* Settings.bundle */; };
@@ -131,7 +132,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-A1B2C3D4E5F6 /* MenuGroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuGroupIcon.swift; sourceTree = "<group>"; };
 		0B6D83597DFB31F85DB20AAC /* Pods_MedianIOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MedianIOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2D0F0DB21AFD0DFBA388D8 /* Pods-vteeniovn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vteeniovn.release.xcconfig"; path = "Target Support Files/Pods-vteeniovn/Pods-vteeniovn.release.xcconfig"; sourceTree = "<group>"; };
 		2002B49818A9991300495B3D /* Median.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Median.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,6 +221,7 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileT
 		209B3218193FA36F0052A7C6 /* LEANUrlCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEANUrlCache.m; sourceTree = "<group>"; };
 		209B321C193FB11A0052A7C6 /* localCache.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = localCache.zip; sourceTree = "<group>"; };
 		20A0B6EC1A363EFB00D9C3F2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		20A13AB51905DED100B997DD /* MenuChildIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuChildIcon.xib; sourceTree = "<group>"; };
 		20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuGroupNoIcon.xib; sourceTree = "<group>"; };
 		20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuChildNoIcon.xib; sourceTree = "<group>"; };
 		20A525ED1A7D94EE00936DC5 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -327,7 +328,6 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileT
 		2002B48F18A9991300495B3D = {
 			isa = PBXGroup;
 			children = (
-A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				BBD972F127AF17C500AD4FC0 /* GoogleService-Info.plist */,
 				2002B4A118A9991300495B3D /* LeanIOS */,
 				2002B4C318A9991300495B3D /* LeanIOSTests */,
@@ -534,6 +534,7 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				20191C461923DF6400BF1549 /* LEANProfilePicker.m */,
 				20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */,
 				20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */,
+				20A13AB51905DED100B997DD /* MenuChildIcon.xib */,
 			);
 			name = Menus;
 			sourceTree = "<group>";
@@ -697,6 +698,7 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				2002B4B718A9991300495B3D /* Images.xcassets in Resources */,
 				207577582195BE3500ADD73A /* LaunchScreenNoNav.storyboard in Resources */,
 				BBED1D652A4CBED900180EBF /* iosCustomJS.js in Resources */,
+				20A13AB61905DED100B997DD /* MenuChildIcon.xib in Resources */,
 				20890D872383421900BC9335 /* BlobDownloader.js in Resources */,
 				BBED1D632A4CBEC900180EBF /* iosCustomCSS.css in Resources */,
 				2075775A2195D80300ADD73A /* LaunchScreenNav.storyboard in Resources */,
@@ -821,7 +823,6 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-A1B2C3D4E5F7 /* MenuGroupIcon.swift in Sources */,
 				20CC06A72671191C00C794F2 /* LEANJsCustomCodeExecutor.m in Sources */,
 				2004AF7B18F8F936001E01E9 /* LEANWebViewIntercept.m in Sources */,
 				2002B4EA18A99A9900495B3D /* UIViewController+REFrostedViewController.m in Sources */,
