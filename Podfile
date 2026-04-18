@@ -11,8 +11,7 @@ target 'vteeniovn' do
   pod 'GoNativeCore'
   pod 'SSZipArchive', '~> 2.6.0'
 
-  # ❌ XÓA dòng này
-  # pod 'MedianIcons'
+  
 
   use_plugins!
 
