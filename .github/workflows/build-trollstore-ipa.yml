@@ -1,4 +1,4 @@
-name: Build IPA Clean Full Fix
+name: Build IPA Clean Stable Fix
 
 on:
   workflow_dispatch:
@@ -8,45 +8,65 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # Checkout
+      # =========================
+      # 1. Checkout code
+      # =========================
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Xcode
+      # =========================
+      # 2. Xcode setup
+      # =========================
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # Clean cache
-      - name: Clean DerivedData
-        run: rm -rf ~/Library/Developer/Xcode/DerivedData
-
-      # 🔥 REMOVE XIB + STORYBOARD FROM BUILD SYSTEM
-      - name: Remove XIB & Storyboard
+      # =========================
+      # 3. CLEAN POD ENV (QUAN TRỌNG)
+      # =========================
+      - name: Clean CocoaPods environment
         run: |
-          PROJ="vteeniovn.xcodeproj/project.pbxproj"
-          cp "$PROJ" "$PROJ.bak"
+          rm -rf Pods
+          rm -rf Podfile.lock
+          rm -rf ~/Library/Caches/CocoaPods
+          rm -rf ~/.cocoapods
 
-          perl -i -pe 's/.*\.xib.*//g' "$PROJ"
-          perl -i -pe 's/.*\.storyboard.*//g' "$PROJ"
-
-      # CocoaPods clean install
-      - name: Install Pods
+      # =========================
+      # 4. INSTALL COCOAPODS
+      # =========================
+      - name: Install CocoaPods
         run: |
           gem install cocoapods
-          rm -rf Pods Podfile.lock
-          pod install --repo-update
+          pod setup
+          pod repo update
 
-      # Clean build
-      - name: Clean Build
+      # =========================
+      # 5. POD INSTALL (FIXED)
+      # =========================
+      - name: Install Pods
+        run: |
+          pod install --repo-update --verbose
+
+      # =========================
+      # 6. CLEAN BUILD CACHE
+      # =========================
+      - name: Clean Xcode cache
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
+
+      # =========================
+      # 7. CLEAN BUILD
+      # =========================
+      - name: Clean project
         run: |
           xcodebuild clean \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
-      # Archive (NO SIGN)
-      - name: Archive
+      # =========================
+      # 8. ARCHIVE (NO SIGN)
+      # =========================
+      - name: Archive IPA
         run: |
           xcodebuild archive \
             -workspace vteeniovn.xcworkspace \
@@ -59,7 +79,9 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM=""
 
-      # Export IPA
+      # =========================
+      # 9. EXPORT IPA
+      # =========================
       - name: Export IPA
         run: |
           mkdir -p build
@@ -68,7 +90,9 @@ jobs:
             -exportPath build \
             -exportOptionsPlist ExportOptions.plist
 
-      # Upload IPA
+      # =========================
+      # 10. UPLOAD IPA
+      # =========================
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
