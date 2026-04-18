@@ -62,7 +62,6 @@
 		209B3219193FA36F0052A7C6 /* LEANUrlCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 209B3218193FA36F0052A7C6 /* LEANUrlCache.m */; };
 		209B321D193FB11A0052A7C6 /* localCache.zip in Resources */ = {isa = PBXBuildFile; fileRef = 209B321C193FB11A0052A7C6 /* localCache.zip */; };
 		20A0B6ED1A363EFB00D9C3F2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A0B6EC1A363EFB00D9C3F2 /* MessageUI.framework */; };
-		20A13AB61905DED100B997DD /* MenuChildIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13AB51905DED100B997DD /* MenuChildIcon.xib */; };
 		20A13AB81905DFFC00B997DD /* MenuGroupNoIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */; };
 		20A13ABC1905FAA600B997DD /* MenuChildNoIcon.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */; };
 		20A525EE1A7D94EE00936DC5 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 20A525ED1A7D94EE00936DC5 /* Settings.bundle */; };
@@ -222,7 +221,6 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileT
 		209B3218193FA36F0052A7C6 /* LEANUrlCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LEANUrlCache.m; sourceTree = "<group>"; };
 		209B321C193FB11A0052A7C6 /* localCache.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = localCache.zip; sourceTree = "<group>"; };
 		20A0B6EC1A363EFB00D9C3F2 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		20A13AB51905DED100B997DD /* MenuChildIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuChildIcon.xib; sourceTree = "<group>"; };
 		20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuGroupNoIcon.xib; sourceTree = "<group>"; };
 		20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuChildNoIcon.xib; sourceTree = "<group>"; };
 		20A525ED1A7D94EE00936DC5 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -536,7 +534,6 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				20191C461923DF6400BF1549 /* LEANProfilePicker.m */,
 				20A13AB71905DFFC00B997DD /* MenuGroupNoIcon.xib */,
 				20A13ABB1905FAA600B997DD /* MenuChildNoIcon.xib */,
-				20A13AB51905DED100B997DD /* MenuChildIcon.xib */,
 			);
 			name = Menus;
 			sourceTree = "<group>";
@@ -700,7 +697,6 @@ A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				2002B4B718A9991300495B3D /* Images.xcassets in Resources */,
 				207577582195BE3500ADD73A /* LaunchScreenNoNav.storyboard in Resources */,
 				BBED1D652A4CBED900180EBF /* iosCustomJS.js in Resources */,
-				20A13AB61905DED100B997DD /* MenuChildIcon.xib in Resources */,
 				20890D872383421900BC9335 /* BlobDownloader.js in Resources */,
 				BBED1D632A4CBEC900180EBF /* iosCustomCSS.css in Resources */,
 				2075775A2195D80300ADD73A /* LaunchScreenNav.storyboard in Resources */,
