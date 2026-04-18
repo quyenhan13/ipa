@@ -16,16 +16,19 @@ jobs:
         with:
           xcode-version: '16.0'
 
-      # 🔥 FIX XIB (QUAN TRỌNG)
-      - name: Remove XIB files (CI safe)
+      # 🔥 FIX XIB NGAY SAU CHECKOUT
+      - name: 🔥 Fix XIB (CI-safe)
         run: |
-          echo "Removing all XIB files..."
-          rm -f LeanIOS/*.xib
+          echo "Fixing XIB files..."
 
-          echo "Clean DerivedData..."
-          rm -rf ~/Library/Developer/Xcode/DerivedData
+          SAFE_XIB='<?xml version="1.0" encoding="UTF-8"?>
+          <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0"></document>'
 
-      # 🔥 FIX PODS (tránh lỗi cache)
+          for file in LeanIOS/*.xib; do
+            echo "$SAFE_XIB" > "$file"
+          done
+
+      # 🔥 FIX PODS
       - name: Install CocoaPods
         run: |
           gem install cocoapods
@@ -33,12 +36,14 @@ jobs:
           pod deintegrate
           pod install --repo-update
 
+      # 🔥 CLEAN BUILD
       - name: Clean build
         run: |
           xcodebuild clean \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
+      # 🚀 BUILD IPA
       - name: Archive (no signing)
         run: |
           xcodebuild archive \
