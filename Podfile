@@ -2,15 +2,13 @@ platform :ios, '15.5'
 
 source 'https://cdn.cocoapods.org/'
 
-require_relative './plugins.rb'
-
 target 'vteeniovn' do
   use_frameworks!
 
-  # Pods cần thiết
-  pod 'GoNativeCore'
   pod 'SSZipArchive', '~> 2.6.0'
 
+  use_plugins!
+end
   
 
   use_plugins!
