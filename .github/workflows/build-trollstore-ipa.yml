@@ -14,19 +14,14 @@ jobs:
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.0'   # Bạn thử đổi thành 15.4 hoặc 16.2 nếu vẫn lỗi
+          xcode-version: '16.0'        # Thử đổi thành '15.4' hoặc '16.2' nếu vẫn lỗi
 
-      - name: Install CocoaPods
+      - name: Install CocoaPods (skip private spec)
         run: |
           gem install cocoapods
-          pod install --repo-update
+          pod install --no-repo-update --verbose
 
-      - name: Disable code signing in project
-        run: |
-          /usr/libexec/PlistBuddy -c "Set :objects:CODE_SIGN_STYLE Manual" vteeniovn.xcodeproj/project.pbxproj || true
-          /usr/libexec/PlistBuddy -c "Set :objects:DEVELOPMENT_TEAM ''" vteeniovn.xcodeproj/project.pbxproj || true
-
-      - name: Archive with no signing
+      - name: Archive with no code signing
         run: |
           xcodebuild clean archive \
             -workspace vteeniovn.xcworkspace \
@@ -39,7 +34,8 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
             CODE_SIGN_STYLE=Manual \
-            EXPANDED_CODE_SIGN_IDENTITY="" 
+            EXPANDED_CODE_SIGN_IDENTITY="" \
+            -allowProvisioningUpdates
 
       - name: Export IPA
         run: |
@@ -49,7 +45,7 @@ jobs:
             -exportPath ./build \
             -exportOptionsPlist ExportOptions.plist
 
-      - name: Upload IPA
+      - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
           name: Median-TrollStore-IPA
