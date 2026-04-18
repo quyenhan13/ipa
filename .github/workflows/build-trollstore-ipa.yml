@@ -57,3 +57,17 @@ jobs:
           name: Median-TrollStore-IPA
           path: ./build/*.ipa
           retention-days: 30
+- name: 🔥 Fix build iOS (remove XIB + plist lỗi)
+  run: |
+    echo "Removing problematic XIB files..."
+    rm -f LeanIOS/*.xib
+
+    echo "Cleaning project.pbxproj..."
+    sed -i '' '/.xib/d' vteeniovn.xcodeproj/project.pbxproj
+
+    echo "Fix InfoPlist.strings..."
+    rm -f LeanIOS/en.lproj/InfoPlist.strings
+    sed -i '' '/InfoPlist.strings/d' vteeniovn.xcodeproj/project.pbxproj
+
+    echo "Clean DerivedData..."
+    rm -rf ~/Library/Developer/Xcode/DerivedData
