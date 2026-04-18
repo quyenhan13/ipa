@@ -132,6 +132,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+A1B2C3D4E5F6 /* MenuGroupIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuGroupIcon.swift; sourceTree = "<group>"; };
 		0B6D83597DFB31F85DB20AAC /* Pods_MedianIOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MedianIOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F2D0F0DB21AFD0DFBA388D8 /* Pods-vteeniovn.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vteeniovn.release.xcconfig"; path = "Target Support Files/Pods-vteeniovn/Pods-vteeniovn.release.xcconfig"; sourceTree = "<group>"; };
 		2002B49818A9991300495B3D /* Median.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Median.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -328,6 +329,7 @@
 		2002B48F18A9991300495B3D = {
 			isa = PBXGroup;
 			children = (
+A1B2C3D4E5F6 /* MenuGroupIcon.swift */,
 				BBD972F127AF17C500AD4FC0 /* GoogleService-Info.plist */,
 				2002B4A118A9991300495B3D /* LeanIOS */,
 				2002B4C318A9991300495B3D /* LeanIOSTests */,
@@ -823,6 +825,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+A1B2C3D4E5F7 /* MenuGroupIcon.swift in Sources */,
 				20CC06A72671191C00C794F2 /* LEANJsCustomCodeExecutor.m in Sources */,
 				2004AF7B18F8F936001E01E9 /* LEANWebViewIntercept.m in Sources */,
 				2002B4EA18A99A9900495B3D /* UIViewController+REFrostedViewController.m in Sources */,
