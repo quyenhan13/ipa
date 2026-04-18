@@ -14,38 +14,16 @@ jobs:
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.0'
-
-      # 🔥 FIX TOÀN BỘ LỖI XIB + PLIST
-      - name: 🔥 Fix CI (remove XIB + plist lỗi)
-        run: |
-          echo "Removing all XIB files..."
-          rm -rf LeanIOS/*.xib
-
-          echo "Cleaning project.pbxproj..."
-          sed -i '' '/.xib/d' vteeniovn.xcodeproj/project.pbxproj
-
-          echo "Fix InfoPlist.strings..."
-          rm -f LeanIOS/en.lproj/InfoPlist.strings
-          sed -i '' '/InfoPlist.strings/d' vteeniovn.xcodeproj/project.pbxproj
-
-          echo "Clean DerivedData..."
-          rm -rf ~/Library/Developer/Xcode/DerivedData
+          xcode-version: '16.0'   # thử '15.4' nếu vẫn lỗi
 
       - name: Install CocoaPods
         run: |
           gem install cocoapods
-          pod install --repo-update
+          pod install --no-repo-update
 
-      - name: Clean build
+      - name: Archive (no signing)
         run: |
-          xcodebuild clean \
-            -workspace vteeniovn.xcworkspace \
-            -scheme vteeniovn
-
-      - name: Archive (No Signing - TrollStore)
-        run: |
-          xcodebuild archive \
+          xcodebuild clean archive \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn \
             -archivePath $RUNNER_TEMP/Median.xcarchive \
@@ -56,19 +34,19 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
             CODE_SIGN_STYLE=Manual \
-            SWIFT_OPTIMIZATION_LEVEL=-Onone \
             -allowProvisioningUpdates
 
       - name: Export IPA
         run: |
-          mkdir -p build
+          mkdir -p ./build
           xcodebuild -exportArchive \
             -archivePath $RUNNER_TEMP/Median.xcarchive \
-            -exportPath build \
+            -exportPath ./build \
             -exportOptionsPlist ExportOptions.plist
 
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: TrollStore-IPA
-          path: build/*.ipa
+          name: Median-TrollStore-IPA
+          path: ./build/*.ipa
+          retention-days: 30
