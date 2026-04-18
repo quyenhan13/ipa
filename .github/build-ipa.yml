@@ -1,0 +1,77 @@
+name: Build IPA
+
+on:
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode
+        run: xcodebuild -version
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: false
+
+      - name: Install CocoaPods
+        run: gem install cocoapods -N
+
+      - name: Install Pods
+        run: pod install --repo-update
+
+      - name: Show workspace and schemes
+        run: |
+          find . -maxdepth 2 \( -name "*.xcworkspace" -o -name "*.xcodeproj" \) -print
+          xcodebuild -list -workspace vteeniovn.xcworkspace
+
+      - name: Build app
+        run: |
+          rm -rf build Payload *.ipa DerivedData
+          mkdir -p build
+
+          xcodebuild \
+            -workspace vteeniovn.xcworkspace \
+            -scheme vteeniovn \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath DerivedData \
+            CONFIGURATION_BUILD_DIR=$PWD/build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            clean build
+
+      - name: Inspect built app
+        run: |
+          find build -name "*.app" -print
+          APP_PATH=$(find build -name "*.app" | head -n 1)
+          ls -la "$APP_PATH"
+          plutil -p "$APP_PATH/Info.plist" || true
+
+      - name: Create IPA
+        run: |
+          mkdir -p Payload
+          APP_PATH=$(find build -name "*.app" | head -n 1)
+          cp -R "$APP_PATH" Payload/
+          ditto -c -k --sequesterRsrc --keepParent Payload app.ipa
+
+      - name: Verify IPA
+        run: |
+          ls -lh app.ipa
+          unzip -l app.ipa | sed -n '1,80p'
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: app.ipa
