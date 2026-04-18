@@ -8,27 +8,34 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      # 1. Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Xcode
       - name: Select Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # 🔥 FIX XIB NGAY SAU CHECKOUT
-      - name: 🔥 Fix XIB (CI-safe)
+      # 🔥 3. REMOVE XIB FROM BUILD (AN TOÀN)
+      - name: 🔥 Remove XIB from build phase (safe)
         run: |
-          echo "Fixing XIB files..."
+          echo "Cleaning XIB references safely..."
 
-          SAFE_XIB='<?xml version="1.0" encoding="UTF-8"?>
-          <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0"></document>'
+          # backup
+          cp vteeniovn.xcodeproj/project.pbxproj pbxproj.bak
 
-          for file in LeanIOS/*.xib; do
-            echo "$SAFE_XIB" > "$file"
-          done
+          # chỉ xóa dòng FILE REFERENCE, KHÔNG phá cấu trúc
+          awk '
+          /\/\* Begin PBXBuildFile section \*\// {inbuild=1}
+          /\/\* End PBXBuildFile section \*\// {inbuild=0}
+          {
+            if(inbuild && $0 ~ /\.xib/) next
+            print
+          }' pbxproj.bak > vteeniovn.xcodeproj/project.pbxproj
 
-      # 🔥 FIX PODS
+      # 🔥 4. CLEAN PODS
       - name: Install CocoaPods
         run: |
           gem install cocoapods
@@ -36,14 +43,15 @@ jobs:
           pod deintegrate
           pod install --repo-update
 
-      # 🔥 CLEAN BUILD
+      # 🔥 5. CLEAN BUILD
       - name: Clean build
         run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
           xcodebuild clean \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
-      # 🚀 BUILD IPA
+      # 🚀 6. ARCHIVE
       - name: Archive (no signing)
         run: |
           xcodebuild archive \
@@ -59,6 +67,7 @@ jobs:
             CODE_SIGN_STYLE=Manual \
             -allowProvisioningUpdates
 
+      # 📦 7. EXPORT IPA
       - name: Export IPA
         run: |
           mkdir -p build
@@ -67,6 +76,7 @@ jobs:
             -exportPath build \
             -exportOptionsPlist ExportOptions.plist
 
+      # 📤 8. UPLOAD
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
