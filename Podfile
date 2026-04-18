@@ -1,11 +1,8 @@
 platform :ios, '15.5'
-
 source 'https://cdn.cocoapods.org/'
 
 target 'vteeniovn' do
   use_frameworks!
-
-  # chỉ giữ pod public ổn định
   pod 'SSZipArchive', '~> 2.6.0'
 end
 
