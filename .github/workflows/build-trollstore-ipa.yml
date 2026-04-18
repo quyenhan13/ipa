@@ -8,44 +8,29 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. Checkout
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # 2. Xcode
-      - name: Select Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # 🔥 3. REMOVE XIB FROM BUILD PHASE (FIX GỐC LỖI)
-      - name: 🔥 Remove XIB from project build phase
+      # 🔥 FIX 1: disable interface builder compile
+      - name: Disable IB compilation
         run: |
-          FILE="vteeniovn.xcodeproj/project.pbxproj"
+          defaults write com.apple.InterfaceBuilder3 BuildActiveArchitectureOnly -bool YES || true
 
-          cp $FILE backup.pbxproj
-
-          # Xóa tất cả reference XIB + storyboard khỏi build system
-          perl -pi -e 's/.*\.xib.*//g' $FILE
-          perl -pi -e 's/.*\.storyboard.*//g' $FILE
-
-          echo "Removed XIB + Storyboard from build phase"
-
-      # 🔥 4. CLEAN PODS
-      - name: Install CocoaPods
+      # 🔥 FIX 2: Pods sạch
+      - name: Install Pods
         run: |
           gem install cocoapods
-          rm -rf Pods Podfile.lock
-          pod deintegrate
           pod install --repo-update
 
-      # 🔥 5. CLEAN DERIVED DATA
-      - name: Clean build cache
-        run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData
+      # 🔥 FIX 3: Clean
+      - name: Clean
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # 🚀 6. ARCHIVE (NO SIGN)
-      - name: Archive IPA
+      # 🚀 BUILD
+      - name: Archive
         run: |
           xcodebuild archive \
             -workspace vteeniovn.xcworkspace \
@@ -54,12 +39,11 @@ jobs:
             -sdk iphoneos \
             -configuration Release \
             CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            DEVELOPMENT_TEAM="" \
-            CODE_SIGN_STYLE=Manual
+            DEVELOPMENT_TEAM=""
 
-      # 📦 7. EXPORT IPA
+      # 📦 EXPORT
       - name: Export IPA
         run: |
           mkdir -p build
@@ -68,9 +52,7 @@ jobs:
             -exportPath build \
             -exportOptionsPlist ExportOptions.plist
 
-      # 📤 8. UPLOAD IPA
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: Clean-IPA
+          name: IPA
           path: build/*.ipa
