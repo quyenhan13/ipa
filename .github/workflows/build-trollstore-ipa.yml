@@ -1,4 +1,4 @@
-name: Build IPA Clean Stable
+name: Build IPA Clean Fix
 
 on:
   workflow_dispatch:
@@ -8,34 +8,41 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. Checkout
+      # Checkout
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Xcode
+      # Xcode
       - name: Select Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # 3. Clean Xcode cache
+      # Clean cache
       - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      # 4. CocoaPods install
+      # 🔥 FIX CHÍNH: loại XIB khỏi build system
+      - name: Remove XIB from build phase
+        run: |
+          PROJ="vteeniovn.xcodeproj/project.pbxproj"
+          cp "$PROJ" "$PROJ.bak"
+          perl -i -pe 's/.*\.xib.*//g' "$PROJ"
+
+      # CocoaPods
       - name: Install Pods
         run: |
           gem install cocoapods
           pod install --repo-update
 
-      # 5. Clean project build
+      # Clean build
       - name: Clean build
         run: |
           xcodebuild clean \
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
-      # 6. Archive (NO SIGN)
+      # Archive (NO SIGN)
       - name: Archive
         run: |
           xcodebuild archive \
@@ -49,18 +56,11 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM=""
 
-      # 7. Export IPA
+      # Export IPA
       - name: Export IPA
         run: |
           mkdir -p build
           xcodebuild -exportArchive \
             -archivePath $RUNNER_TEMP/app.xcarchive \
             -exportPath build \
-            -exportOptionsPlist ExportOptions.plist
-
-      # 8. Upload artifact
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
-        with:
-          name: IPA
-          path: build/*.ipa
+            -export
