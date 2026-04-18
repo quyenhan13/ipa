@@ -1,6 +1,5 @@
 platform :ios, '15.5'
 
-# Chỉ dùng CDN công khai, bỏ private spec của GoNative
 source 'https://cdn.cocoapods.org/'
 
 require_relative './plugins.rb'
@@ -8,10 +7,12 @@ require_relative './plugins.rb'
 target 'vteeniovn' do
   use_frameworks!
 
-  # Pods cho Median / GoNative
+  # Pods cần thiết
   pod 'GoNativeCore'
-  pod 'MedianIcons'
   pod 'SSZipArchive', '~> 2.6.0'
+
+  # ❌ XÓA dòng này
+  # pod 'MedianIcons'
 
   use_plugins!
 
