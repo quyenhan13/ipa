@@ -8,23 +8,31 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.0'
 
-      # 🔥 Clean Pods
-      - name: Install CocoaPods
+      # 🔥 FIX THẬT (LOẠI XIB + STORYBOARD KHỎI BUILD)
+      - name: 🔥 Remove XIB & Storyboard from project
+        run: |
+          FILE="vteeniovn.xcodeproj/project.pbxproj"
+
+          cp $FILE backup.pbxproj
+
+          # Xóa mọi reference tới xib + storyboard trong build phase
+          grep -vE '\.xib|\.storyboard' backup.pbxproj > $FILE
+
+      # Pods
+      - name: Install Pods
         run: |
           gem install cocoapods
           rm -rf Pods Podfile.lock
           pod deintegrate
           pod install --repo-update
 
-      # 🔥 Clean build
+      # Clean
       - name: Clean
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
@@ -32,7 +40,7 @@ jobs:
             -workspace vteeniovn.xcworkspace \
             -scheme vteeniovn
 
-      # 🚀 BUILD (TẮT XIB + STORYBOARD)
+      # Build
       - name: Archive
         run: |
           xcodebuild archive \
@@ -45,11 +53,8 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
             DEVELOPMENT_TEAM="" \
-            CODE_SIGN_STYLE=Manual \
-            IBC_ENABLED=NO \
-            -allowProvisioningUpdates
+            CODE_SIGN_STYLE=Manual
 
-      # 📦 Export IPA
       - name: Export IPA
         run: |
           mkdir -p build
@@ -58,8 +63,7 @@ jobs:
             -exportPath build \
             -exportOptionsPlist ExportOptions.plist
 
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: IPA
           path: build/*.ipa
