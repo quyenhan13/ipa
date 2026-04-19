@@ -1,9 +1,12 @@
 platform :ios, '15.5'
 source 'https://cdn.cocoapods.org/'
+source 'git@github.com:gonativeio/gonative-specs.git'
 
 target 'vteeniovn' do
   use_frameworks!
 
+  pod 'GoNativeCore'
+  pod 'MedianIcons'
   pod 'SSZipArchive', '~> 2.6.0'
 end
 
