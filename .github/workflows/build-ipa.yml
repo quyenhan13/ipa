@@ -70,7 +70,7 @@ jobs:
           unzip -l app.ipa | sed -n '1,80p'
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ipa
           path: app.ipa
