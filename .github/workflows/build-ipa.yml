@@ -1,93 +1,23 @@
-name: Build IPA Clean Full
+platform :ios, '15.5'
+source 'https://cdn.cocoapods.org/'
+source 'git@github.com:gonativeio/gonative-specs.git'
 
-on:
-  workflow_dispatch:
+target 'vteeniovn' do
+  use_frameworks!
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  pod 'GoNativeCore'
+  pod 'MedianIcons'
+  pod 'SSZipArchive', '~> 2.6.0'
+end
 
-jobs:
-  build:
-    runs-on: macos-14
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-- name: Test SSH access
-  run: |
-    ssh -T git@github.com || true
-    git ls-remote git@github.com:gonativeio/gonative-specs.git 
-      - name: Show Xcode 
-        run: xcodebuild -version
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2'
-
-      - name: Setup SSH for private CocoaPods specs
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-
-      - name: Install CocoaPods
-        run: |
-          gem install cocoapods -N
-          pod --version
-
-      - name: Install Pods
-        run: pod install --repo-update
-
-      - name: Show workspace and schemes
-        run: |
-          find . -maxdepth 2 \( -name "*.xcworkspace" -o -name "*.xcodeproj" \) -print
-          xcodebuild -list -workspace vteeniovn.xcworkspace
-
-      - name: Build app
-        run: |
-          rm -rf build Payload app.ipa DerivedData
-          mkdir -p build
-
-          xcodebuild \
-            -workspace vteeniovn.xcworkspace \
-            -scheme vteeniovn \
-            -configuration Release \
-            -sdk iphoneos \
-            -derivedDataPath DerivedData \
-            CONFIGURATION_BUILD_DIR=$PWD/build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            clean build
-
-      - name: Inspect built app
-        run: |
-          find build -name "*.app" -print
-          APP_PATH=$(find build -name "*.app" | head -n 1)
-          test -n "$APP_PATH"
-          ls -la "$APP_PATH"
-          plutil -p "$APP_PATH/Info.plist" || true
-
-      - name: Create IPA
-        run: |
-          mkdir -p Payload
-          APP_PATH=$(find build -name "*.app" | head -n 1)
-          cp -R "$APP_PATH" Payload/
-          ditto -c -k --sequesterRsrc --keepParent Payload app.ipa
-
-      - name: Verify IPA
-        run: |
-          ls -lh app.ipa
-          unzip -l app.ipa | sed -n '1,80p'
-
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
-        with:
-          name: ipa
-          path: app.ipa
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.5'
+      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
+      config.build_settings['CODE_SIGN_IDENTITY'] = ''
+      config.build_settings['DEVELOPMENT_TEAM'] = ''
+    end
+  end
+end
